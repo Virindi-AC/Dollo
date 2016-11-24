@@ -4,6 +4,10 @@ Some of the setting are not mm but at variables that you can set, such as 2*x=2x
 I will try to specify when things are variables and not exact measurements.
 */
 
+//Virindi settings
+dovetail_male_width_scale = 0.98;
+dovetail_male_height_scale = 0.91;
+
 obj_leg = 30;
 leg_length = 5.5;
 small_number = 0.001;

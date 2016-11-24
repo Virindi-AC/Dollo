@@ -7,8 +7,8 @@ thickness = 21;
 module y_mount_added(){
 	translate([0,-15+6-3.5,51/2]) cube([30,thickness,51], center=true);
     
-    translate([-8,-12.5+thickness/2,-55+tail_depth]) scale([.9,.9,.9]) male_dovetail(height=15);
-	translate([8,-12.5+thickness/2,-55+tail_depth]) scale([.9,.9,.9]) male_dovetail(height=15);
+    translate([-8,-12.5+thickness/2,-55+tail_depth]) scale([dovetail_male_width_scale, dovetail_male_height_scale, 0.9]) male_dovetail(height=15);
+	translate([8,-12.5+thickness/2,-55+tail_depth]) scale([dovetail_male_width_scale, dovetail_male_height_scale, 0.9]) male_dovetail(height=15);
     
 
 }

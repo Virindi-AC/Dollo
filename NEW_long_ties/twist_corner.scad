@@ -5,7 +5,7 @@ use <gears.scad>;
 ///////////////////// FOCUS ON THIS NOW //////////////////////////////
 tooth_depth = (sqrt(18)/2)+2;
 twisted_depth = 2;
-units = 2;
+units = 4; //Multiple of 2
 r =37;
 mirror = true;
 double = false; //this will make the piece twist in both directions. only works if you have a high pitch screw
@@ -30,12 +30,12 @@ module arm_movement(){
 	difference(){
 		//part im trying to make
         difference(){
-            translate([-95+tooth_depth,-95+tooth_depth,30]) rotate([0,0,45]) cube([45,45,((units+1)*30)-.25], center=true);
-            translate([-105+(-15/2),-105+(-15/2),30]) cube([45,45,30*5], center=true);
+            translate([-95+tooth_depth,-95+tooth_depth,15*units]) rotate([0,0,45]) cube([45,45,((units+1)*30)-.25], center=true);
+            translate([-105+(-15/2),-105+(-15/2),30]) cube([45,45,30*2*units], center=true);
         }
         //twist
 	
-        for (extrude=[0:units+1]){
+        for (extrude=[0:units+3]){
             translate([0+(gearLarge+(gearLarge/2))+tooth_depth,0+(gearLarge+(gearLarge/2))+tooth_depth,extrude*20]) color([0,1,0]) rotate([0,0,(360/22)*1.75]) twist_large_extrude($fn=resolution);
             translate([21.5-95,21.5-95,extrude*30-45-5]) rotate([90,0,90]) wrap();
         }
@@ -64,7 +64,7 @@ module base(){
 
 module top_dove() {
     intersection() {
-        scale([0.9, 1, 0.95]) rotate ([90,0,0]) intersection() {
+        scale([dovetail_male_width_scale, 1, dovetail_male_height_scale]) rotate ([90,0,0]) intersection() {
             intersection() {
                 male_dovetail(height=11.7);
                 translate([-6,0,0]) cube([10,4.6,25]);
@@ -88,7 +88,7 @@ module with_dove(){
         }
     }
 
-    translate([-2,0,0]) difference(){
+    translate([-2 * (units/2),0,0]) difference(){
         union(){
             translate([11,14.2,30*units+1.1]) top_dove();
             translate([-11,14.2,30*units+1.1]) top_dove();

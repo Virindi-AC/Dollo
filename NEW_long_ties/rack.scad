@@ -5,11 +5,13 @@ include <globals.scad>;
 //globals
 
 obj_height = 40;
-units = 8; //only even numbers
+units = 10; //only even numbers
 tail_depth = 8;
 tie_scale_x = 1;
 tie_scale_y = 1;
 tie_scale_z = 1;
+gear_cut_depth = 4;
+gear_cut_from_center = 9.25;
 
 resolution = 10;
 
@@ -79,7 +81,7 @@ module rackObject() {
 }
 diamiter = 4;
 
-  
+  difference(){
 intersection(){
 //translate([0,0,-10]) cube([20,20,20]);
 	intersection(){
@@ -111,4 +113,12 @@ intersection(){
 	//intersection
 	}
 //intersection
+}
+
+translate([0,10+gear_cut_from_center,25-gear_cut_depth])
+cube([30*units+1,20,50],center=true);
+
+
+
+
 }

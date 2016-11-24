@@ -10,10 +10,10 @@ tail_depth = 11;
 mount_max = 62.5;
 wabble = 1.5;
 not_tooth_gap = 0;
-rack_gap = 2.5;
-tower_height = 17.5+3;
+rack_gap = 2.5   +1.0;
+tower_height = 17.5+3  -0.3;
 
-text = "Dollo";
+text = "+1.0";
 font = "Liberation Sans";
 
 hole_length = 0.8;
@@ -42,6 +42,7 @@ module y_mount_added(){
     
     translate([0,2.25-2.25+rack_gap/2,-1]) rounded_cube(depth = 50+rack_gap*2, width = frame_width+15+1, height=4, center=true);
     
+    //Bottom bar that rides on track
 	translate([0,frame_width-15.5+rack_gap,2.5]) rounded_cube(height = 5, width = 50, depth = 11, diameter = 3.5);
 //towers
     echo ((17.5+4.25)/2);
@@ -73,14 +74,16 @@ module y_mount_taken(){
 	 ];
 	 
 		 rotate([0,0,-90]) for (a = halign) {
-		   translate([-15, 15,-3]) {
+		   translate([-15, 22,-3]) {
+             mirror([0,1,0])
 			 linear_extrude(height = 1) {
 			   text(text = str(text), font = font, size = 8, halign = a[1]);
 			 }
 		   }
 		 }
 		 rotate([0,0,90]) for (a = halign) {
-		   translate([15,15,-3]) {
+		   translate([15,22,-3]) {
+             mirror([0,1,0])
 			 linear_extrude(height = 1) {
 			   text(text = str(text), font = font, size = 8, halign = a[1]);
 			 }
