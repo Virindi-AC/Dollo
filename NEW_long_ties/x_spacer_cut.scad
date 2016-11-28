@@ -30,9 +30,14 @@ rotate([90,0,0]) difference(){
 
 module x_spacer()
 {
-rotate([90,0,0]) difference(){
+rotate([90,0,0]) 
+    difference(){
 	y_mount_added();
 	y_mount_taken();
+        
+    translate([0,0,240])
+    rotate([0,-40,0])
+    cube([300,300,300],center=true);
 }
 }
 

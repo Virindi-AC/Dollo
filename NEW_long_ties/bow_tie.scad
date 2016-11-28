@@ -32,8 +32,8 @@ module bow_tie_master(){
 	}
 }
 module bow_holes() {
-	translate([-10,-2.5,-2.5]) rotate([0,90,0]) #cylinder(h=50, d=1.5);
-	translate([-10,2.5,-2.5]) rotate([0,90,0]) #cylinder(h=50, d=1.5);
+	//translate([-10,-2.5,-2.5]) rotate([0,90,0]) #cylinder(h=50, d=1.5);
+	//translate([-10,2.5,-2.5]) rotate([0,90,0]) #cylinder(h=50, d=1.5);
 }
 
 module finished(){
