@@ -1,3 +1,10 @@
+//Dollo hotend/sensor/fan carriage by Virindi
+//BOM:
+//-China E3D v6 Clone
+//-Sensor LJC18A3-H-Z/BX or other similar size sensor
+//-Blower Fan XS235 (50mm blower fan)
+//-M3 screws and nuts...
+
 include <globals.scad>;
 include <include.scad>;
 
@@ -117,6 +124,10 @@ module main_carriage_m()
         
         //Sensor Corner: Bottom
         translate([50+17,50-20+11,30-11])
+        cube([100,70,60],center=true);
+        
+        //Sensor Side
+        translate([80-4,0,0])
         cube([100,70,60],center=true);
         
         //Slit
@@ -272,7 +283,7 @@ module main_carriage_left()
     {
         main_carriage();
         
-        translate([100+hotend_x-0.001,0,0])
+        translate([-100-hotend_x+0.001,0,0])
         cube([200,200,200],center=true);
     }
 }
@@ -283,7 +294,7 @@ module main_carriage_right()
     {
         main_carriage();
         
-        translate([-100+hotend_x+0.001,0,0])
+        translate([100-hotend_x-0.001,0,0])
         cube([200,200,200],center=true);
     }
 }
@@ -366,7 +377,13 @@ module fan_plate_m()
         translate([0,0,plate_t/2+15/2-plate_t])
         cube([51,51,plate_t],center=true);
         
-        //Screw hole cut
+        //Screw hole cut: small
+        translate([-1,40,-35])
+        rotate([40,0,0])
+        translate([hole_horizontal/2,-hole_vertical/2,10+plate_t/2+9])
+        cylinder(h=50,d=3.5,center=true);
+        
+        //Screw hole cut: big cylinder
         translate([-1,40,-35])
         rotate([40,0,0])
         translate([hole_horizontal/2,-hole_vertical/2,10+plate_t/2+9])
@@ -499,8 +516,9 @@ module assembly()
 }
 
 assembly();
-//main_carriage_left();
-//main_carriage_right();
+//rotate([0,90,0]) main_carriage_left(); //Hotend holder piece
+//main_carriage_right(); //Main
+//rotate([0,-90,0]) fan_plate();
 
 /*
 hotend_depth = 75;
