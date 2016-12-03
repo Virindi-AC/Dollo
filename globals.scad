@@ -4,6 +4,9 @@ Some of the setting are not mm but at variables that you can set, such as 2*x=2x
 I will try to specify when things are variables and not exact measurements.
 */
 
+// printer slop, used by snappy parts
+slop = 0.15;
+
 //Virindi settings
 dovetail_male_width_scale = 0.98;
 dovetail_male_height_scale = 0.91;
@@ -57,4 +60,19 @@ girl_height=obj_leg;
 The Y is so normal that all of those global variables at the top should change all of the setting in it, this section is set her incase there are variables set in the future development of this project.
 */
 
+// stepper
+motor_side_length = 43.2;
+motor_bolt_hole_distance = 31;
+motor_center_hole = 23;
+motor_shaft_dia = 5;
+motor_shaft_hole_dia = 5+2*slop;
 
+// bolts etc.
+bolt_hole_dia = 3+2*slop;
+bolt_head_hole_dia = 5.8;
+
+m3_nut_side = 5.65;
+
+// threaded rod
+lifter_rod_diam = 9.86;
+hole_threaded_rod = lifter_rod_diam+2*slop;

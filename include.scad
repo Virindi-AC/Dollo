@@ -1,3 +1,5 @@
+use <globals.scad>
+
 //////////////////      END SECTION       //////////////////
 
 	module added_pins(){
@@ -123,6 +125,27 @@ module pins_z(){
 		pin_out();
 		pin_cuts();
 	}
+}
+
+module rounded_cube(width,depth,height){
+    hull(){
+        translate([width/2-diameter/2,depth/2-diameter/2,height/2-diameter/2]) sphere(d=diameter);
+        translate([width/2-(diameter/2),depth/2-(diameter/2),-height/2+(diameter/2)]) sphere(d=diameter);
+        translate([-width/2+diameter/2,depth/2-diameter/2,height/2-diameter/2]) sphere(d=diameter);
+        translate([-width/2+(diameter/2),depth/2-(diameter/2),-height/2+(diameter/2)]) sphere(d=diameter);
+        
+        translate([width/2-diameter/2,-depth/2+diameter/2,height/2-diameter/2]) sphere(d=diameter);
+        translate([width/2-(diameter/2),-depth/2+(diameter/2),-height/2+(diameter/2)]) sphere(d=diameter);
+        translate([-width/2+diameter/2,-depth/2+diameter/2,height/2-diameter/2]) sphere(d=diameter);
+        translate([-width/2+(diameter/2),-depth/2+(diameter/2),-height/2+(diameter/2)]) sphere(d=diameter);
+    }
+}
+
+module motor_shaft_hole(h=10) {
+    difference() {
+        cylinder(d=motor_shaft_hole_dia, h=h);
+        translate([0,4.5,h/2]) cube([5,5,h], center=true); 
+    }
 }
 //////////////////      RACK AND SLIDE     ///////////////////
 
