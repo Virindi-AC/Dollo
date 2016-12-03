@@ -1,6 +1,8 @@
 # Whitney
 Whitney is a modular 3d printer system based on the Dollo design.
 
+Whitney is currently a work in progress.
+
 While the Dollo and Snappy printers have achieved a high level of printability, we believe that the next evolution for Reprap is in modularity. Just as in the 1700s each individual machine was hand-tuned for its individual parts, current 3d printer designs include specially designed parts just for the particular design. Customization is generally limited to choosing sizes. Using spare parts you already have often requires a large amount of design work, and designing a new mechanism (such as a rack and pinion drive) requires either grafting to an existing monolithic design or creating a whole new printer design.
 
 # Modularity
