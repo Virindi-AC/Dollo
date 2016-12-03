@@ -6,6 +6,8 @@ Whitney is currently a work in progress.
 While the Dollo and Snappy printers have achieved a high level of printability, we believe that the next evolution for Reprap is in modularity. Just as in the 1700s each individual machine was hand-tuned for its individual parts, current 3d printer designs include specially designed parts just for the particular design. Customization is generally limited to choosing sizes. Using spare parts you already have often requires a large amount of design work, and designing a new mechanism (such as a rack and pinion drive) requires either grafting to an existing monolithic design or creating a whole new printer design.
 
 # Modularity
+The ultimate goal of Whitney is to create a set of components that the printer builder can pick from and assemble together to create a printer that meets their particular needs. Combining different modules should be simple, like playing with Lego or similar toys.
+
 A modular 3d printer system should allow the creation, testing, and refinement of individual mechanisms without having to make large changes to the rest of the printer (and allowing you to reuse parts easily). Different developers could then focus on different mechanisms.
 
 Building a printed printer is a game of tradeoffs. Do you prefer printability or print quality? Do you have the money to spend or extra parts available for linear-rod movement, or are you working on a shoestring with no parts available? Allowing the builder to pick and choose which mechanisms go into a printer moves these tradeoffs from the printer designer to the printer builder.
