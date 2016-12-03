@@ -9,9 +9,11 @@ A modular 3d printer system should allow the creation, testing, and refinement o
 Building a printed printer is a game of tradeoffs. Do you prefer printability or print quality? Do you have the money to spend or extra parts available for linear-rod movement, or are you working on a shoestring with no parts available? Allowing the builder to pick and choose which mechanisms go into a printer moves these tradeoffs from the printer designer to the printer builder.
 
 # Structure of Whitney
-
 Whitney is broken into <i>modules</i> and <i>variants</i>.
 
 <i>Modules</i> are individual parts of a printer, such as a rack and pinion system, a structural system, or a particular type of Z-axis.
 
 <i>Variants</i> are collections of specific <i>modules</i> which create a certain printer configuration. For instance, a machine could be built with a 100x100 build plate size, or a 200x200 size, etc. One variant could be designed for maximum printability, while another could be designed for maximum speed or quality using additional vitamins.
+
+# Origins
+Whitney draws on the work of Dollo by Ben Beezy, Spegelius and others. Some included models are from Revarbat's Snappy and NopHead's Mendel90.
