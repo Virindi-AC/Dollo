@@ -352,5 +352,5 @@ module view_parts() {
     
 }
 
-//view_proper();
-view_parts();
+view_proper();
+//view_parts();
