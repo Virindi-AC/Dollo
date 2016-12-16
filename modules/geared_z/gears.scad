@@ -42,10 +42,58 @@ module pins(height=10, z=0, d=5){
     translate([-pin_position,-pin_position,z]) cylinder(h=height, d=d);
 }
 
+
+
 module gear_one(hole_diameter_gears=5.5){
-    translate([0,0,thickness_gears]) mirror([0,0,1]) gear(mm_per_tooth_gears,12,thickness_gears,hole_diameter_gears,twist_gears);
-    gear(mm_per_tooth_gears,12,thickness_gears,hole_diameter_gears,twist_gears);
-    translate([0,4.5,thickness_gears/2]) cube([5,5,thickness_gears*2], center=true);
+
+    
+
+
+    module bolt_hole() {
+        translate([0, 0, 12-5.5])
+       {
+           //translate([5,0,0]) rotate([0,90,0]) cylinder(d=6.8, h=10);
+           rotate([0,90,0]) cylinder(d=3, h=10);
+           //translate([1.5,0,6.8]) rotate([0,45,0]) translate([10,0,50]) cube([10,4,100],center=true);
+           translate([4.5,0,25-3.5]) cube([2.7,5.7,50],center=true);
+       }
+    }
+    
+    //subtract set screw holes
+    difference()
+    {
+        //combine d shaft with gear+riser
+        union()
+        {
+            //subtract center hole
+            difference()
+            {
+                //combine gear with riser
+                union()
+                {
+                    //Top twist (currently zero twist)
+                    translate([0,0,thickness_gears]) mirror([0,0,1]) gear(mm_per_tooth_gears,9,thickness_gears,hole_diameter_gears,twist_gears);
+                    
+                    //Bottom twist
+                    gear(mm_per_tooth_gears,9,thickness_gears,hole_diameter_gears,twist_gears);
+                            
+                    translate([0,0,10-5.5])
+                    cylinder(d=16.2,h=6);
+                }
+                //center hole
+                translate([0,0,9-5.5])
+                cylinder(d=hole_diameter_gears, h=10, $fn=20);
+            }
+        
+            //D shaft block
+            translate([0,4.5,thickness_gears/2+3]) cube([5,5,thickness_gears*2+6], center=true);
+        }
+        
+        //Set screw holes
+        rotate([0,0,90]) bolt_hole();
+        rotate([0,0,90]) rotate([0,0,360/3]) bolt_hole();
+        rotate([0,0,90]) rotate([0,0,2*360/3]) bolt_hole();
+    }
 }
 		
 		

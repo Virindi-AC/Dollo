@@ -304,6 +304,12 @@ module boltholder(h=10) {
         cube([arm_hole_width+0.2, height+0.6, h], center=true);
         translate([0,10,h/2 - 5]) rotate([90,0,0]) cylinder(d=bolt_hole_dia, h=30, $fn=30);
         translate([0, height/2+0.6+2+1.5, 0]) cube([5.65, 3, h], center=true);
+        
+        //Make top thinner
+        translate([-6,-12.5,-7]) cube([12,20,20]);
+        
+        //Cut off bottom
+        translate([-10,-20,-7]) cube([20,20,20]);
     }
 }
 
@@ -311,11 +317,22 @@ module boltholder_center() {
     difference() {
         translate([0, 0, 12]) boltholder(h=16);
         translate([0, 0, 12]) cube([arm_hole_width+6, height+0.6, 16], center=true);
+        
+        //Make top thinner
+        translate([-6,-12.5,-8]) cube([12,20,20]);
+        //Cut off bottom
+        translate([-10,-30,-15]) cube([20,30,30]);    
     }
     difference() {
         translate([0,1.4,0]) cube([arm_hole_width+4.2, height+0.6+6.8, 10], center=true);
         cube([arm_hole_width+0.2, height+0.6, 10], center=true);
+        
+        //Make top thinner
+        translate([-6,-12.5,-8]) cube([12,20,20]);
+        //Cut off bottom
+        translate([-10,-30,-15]) cube([20,30,30]);    
     }
+    
 }
 
 

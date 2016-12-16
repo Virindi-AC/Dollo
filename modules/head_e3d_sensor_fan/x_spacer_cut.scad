@@ -1,5 +1,6 @@
 include <../../globals.scad>;
 include <../../include.scad>;
+use <long_bow_tie_cut.scad>
 
 tail_depth = 55;
 tail_depth_2 = -10;
@@ -51,3 +52,6 @@ x_spacer();
 
 translate([-20,0,0])
 mirror([1,0,0]) x_spacer();
+
+//translate([-28,-38,0])
+//cut_tie();
