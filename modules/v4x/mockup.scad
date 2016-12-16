@@ -1,6 +1,6 @@
-use <dollo/Dollo.git/trunk/include/vitamins/e3d_hot_end.scad>
-include <dollo/Dollo.git/trunk/globals.scad>
-include <dollo/Dollo.git/trunk/include.scad>
+use <../../include/vitamins/e3d_hot_end.scad>
+include <../../globals.scad>
+include <../../include.scad>
 
 current_x = 0;
 current_y = 0;
