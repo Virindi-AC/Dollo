@@ -1,6 +1,6 @@
 include <../../include.scad>;
 include <../../globals.scad>;
-//if you can do pretty far over hangs, like an SLA printer or something then take this off by setting it to flase.
+//if you can do pretty far over hangs, like an SLA printer or something then take this off by setting it to false.
     support = true;
 	slot_translate = .5;
 	rod_size = .5;
@@ -41,12 +41,19 @@ module basic_corner(){
 };
 module full_corner(){
 
+    module edge_pillers() {
+        translate([12.5,-20.5,0]) {
+            rotate(120) cube([6,1,8]);
+            translate([0,-1.5,0]) cylinder(r=3, h=2, $fn=6);
+        }
+    }
+
 	module support_pillers(){
-		
+
         //These seem to not have a lot of effect.
 		translate([48-slot_translate/2,3,0]) cylinder(h=11,d=4);
 		translate([48-slot_translate/2,-3,0]) cylinder(h=11,d=4);
-		
+
         //These do not perform well, joining with the part perimeter.
         //Support this area with slic3r supports. Set support overhang
         //threshold to do this.
@@ -59,7 +66,7 @@ module full_corner(){
             }
             translate([0,0,27.7+100])
             cube(200,200,200,center=true);
-            
+
             translate([-100+(39-slot_translate/2)-3.9,0,0])
             cube(200,200,200,center=true);
         }
@@ -70,28 +77,32 @@ module full_corner(){
 		support_pillers();
 		rotate([0,0,(360/3)*2]) support_pillers();
 		rotate([0,0,(360/3)*1]) support_pillers();
-        
+
+        edge_pillers();
+		rotate([0,0,(360/3)*2]) edge_pillers();
+		rotate([0,0,(360/3)*1]) edge_pillers();
+
         //Center rod hole tops
         translate([9.3,0,0])
         cylinder(h=11.3,d=4);
-        
+
         rotate([0,0,(360/3)*2])
         translate([9.3,0,0])
         cylinder(h=11.3,d=4);
-        
+
         rotate([0,0,(360/3)*1])
         translate([9.3,0,0])
         cylinder(h=11.3,d=4);
-        
+
         //Center vee
         rotate([0,0,(360/6)*1])
         translate([7.4,0,0])
         cylinder(h=16.25,d=2);
-        
+
         rotate([0,0,(360/6)*1 + (360/3)*1])
         translate([7.4,0,0])
         cylinder(h=16.25,d=2);
-        
+
         rotate([0,0,(360/6)*1 + (360/3)*2])
         translate([7.4,0,0])
         cylinder(h=16.25,d=2);
@@ -122,10 +133,10 @@ full_corner();
 module supportside()
 {
     sup_w = 4;
-    
+
     translate([15.3,-16-sup_w,0])
     cube([29.7,sup_w,14]);
-    
+
     difference()
     {
         union()
@@ -134,11 +145,11 @@ module supportside()
             rotate([-45,0,0])
             cube([29.7,sup_w,20]);
         }
-        
+
         translate([0,0,17.5+50+6.3])
         rotate([16.7,0,0])
         cube([100,100,100],center=true);
-        
+
         translate([0,50-16+5.5,0])
         cube([100,100,100],center=true);
     }
