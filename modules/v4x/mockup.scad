@@ -78,7 +78,8 @@ x_rail_z = -(outer_rod_diameter/2+center_rail_diameter/2+2) - center_rail_diff;
 center_carriage_width = 50;
 print_zone = center_rail_len - (center_rail_diameter + outer_carriage_rod_w+outer_carriage_extra_w
 +center_carriage_width //Center carriage
-+2*clamp_zone-outer_rod_diameter //Clamp zone
+//+2*clamp_zone-outer_rod_diameter //Clamp zone
++motor_size //Clamp zone
 );
 build_plate_size = print_zone;
 
@@ -739,14 +740,18 @@ module clamp_righthand()
     block_x = outer_rail_pos-motor_size/2;
     block_x_sz = (frame_translate+frame_bar_size/2) - block_x;
     
-    block_y = outer_rail_pos-clamp_zone;
+    //block_y = outer_rail_pos-clamp_zone;
+    //block_y_sz = motor_size/2+motor_from_rail+clamp_zone-3;
+    block_y = outer_rail_pos-motor_size/2;
+    block_y_sz = motor_size/2+motor_from_rail+clamp_zone-3+(motor_size/2-clamp_zone);
+    old_block_y = outer_rail_pos-clamp_zone;
     
     //vertical_corner_clamp
     color([0.8,0.4,0.4])
     difference()
     {
         translate([block_x,block_y,block_bottom])
-        cube([block_x_sz,motor_size/2+motor_from_rail+clamp_zone-3, block_h
+        cube([block_x_sz,block_y_sz, block_h
     ]);
         
         //Motor
@@ -795,8 +800,8 @@ module clamp_righthand()
         cube([50,motor_center_ring_d+0.4,shaftcut_h]);
         
         //Rods
-        translate([outer_rail_pos,outer_rail_pos-clamp_zone-0.01,y_rail_z])
-        rotate([-90,0,0]) cylinder(h=clamp_zone+motor_from_rail,d=outer_rod_diameter);
+        translate([outer_rail_pos,outer_rail_pos-motor_size-0.01,y_rail_z])
+        rotate([-90,0,0]) cylinder(h=motor_size+motor_from_rail,d=outer_rod_diameter);
         
         translate([outer_rail_pos-motor_size/2-0.1,outer_rail_pos,x_rail_z])
         rotate([0,90,0]) cylinder(h=motor_size+frame_bar_size+0.2,d=outer_rod_diameter);
@@ -926,6 +931,10 @@ module clamp_righthand()
         translate([frame_translate-frame_bar_size/2+v_cut_size/2,outer_rail_pos-50+1,0])
         cube([v_cut_size,100,100],center=true);
         
+        //Cut the idler to the old size
+        translate([(frame_translate-frame_bar_size/2+v_cut_size/2-0.01),block_y-1,-50])
+        cube([block_x+block_x_sz-(frame_translate-frame_bar_size/2+v_cut_size/2)+1,1+old_block_y-block_y,100]);
+        
         //Vertical cuts for the rod clamps
         //XZ
         translate([-100+frame_translate-frame_bar_size/2,outer_rail_pos+motor_from_rail-motor_size/2-v_cut_size,-100+y_rail_z])
@@ -1004,14 +1013,18 @@ module clamp_lefthand()
     block_x = outer_rail_pos-motor_size/2;
     block_x_sz = (frame_translate+frame_bar_size/2) - block_x;
     
-    block_y = outer_rail_pos-clamp_zone;
-    
+    //block_y = outer_rail_pos-clamp_zone;
+    //block_y_sz = motor_size/2+motor_from_rail+clamp_zone-3;
+    block_y = outer_rail_pos-motor_size/2;
+    block_y_sz = motor_size/2+motor_from_rail+clamp_zone-3+(motor_size/2-clamp_zone);
+    old_block_y = outer_rail_pos-clamp_zone;
+
     //vertical_corner_clamp
     color([0.4,0.4,0.8])
     difference()
     {
         translate([block_x,block_y,block_bottom])
-        cube([block_x_sz,motor_size/2+motor_from_rail+clamp_zone-3, block_h
+        cube([block_x_sz,block_y_sz, block_h
     ]);
         
         //Motor
@@ -1061,8 +1074,8 @@ module clamp_lefthand()
         cube([50,motor_center_ring_d+0.4,shaftcut_h]);
         
         //Rods
-        translate([outer_rail_pos,outer_rail_pos-clamp_zone-0.01,x_rail_z])
-        rotate([-90,0,0]) cylinder(h=clamp_zone+motor_from_rail,d=outer_rod_diameter);
+        translate([outer_rail_pos,outer_rail_pos-motor_size-0.01,x_rail_z])
+        rotate([-90,0,0]) cylinder(h=motor_size+motor_from_rail,d=outer_rod_diameter);
         
         translate([outer_rail_pos-motor_size/2-0.1,outer_rail_pos,y_rail_z])
         rotate([0,90,0]) cylinder(h=motor_size+frame_bar_size+0.2,d=outer_rod_diameter);
@@ -1185,6 +1198,10 @@ module clamp_lefthand()
         //Cut off the idler
         translate([frame_translate-frame_bar_size/2+v_cut_size/2,outer_rail_pos-50+1,0])
         cube([v_cut_size,100,100],center=true);
+        
+        //Cut the idler to the old size
+        translate([(frame_translate-frame_bar_size/2+v_cut_size/2-0.01),block_y-1,-50])
+        cube([block_x+block_x_sz-(frame_translate-frame_bar_size/2+v_cut_size/2)+1,1+old_block_y-block_y,100]);
         
         //Vertical cuts for the rod clamps
         //XZ
@@ -1331,7 +1348,7 @@ module assembly()
 {
     motors();
     idlers();
-    //belts();
+    belts();
     
     clamp_righthand_split();
     //rotate([0,0,180]) clamp_righthand_split();
