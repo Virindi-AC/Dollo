@@ -1,10 +1,11 @@
 use <../../include/vitamins/e3d_hot_end.scad>
 use <pulley_tooth.scad>
+use <../xycarriage_simple/carriage.scad>
 include <../../globals.scad>
 include <../../include.scad>
 
-current_x = 20;
-current_y = 40;
+current_x = -90;
+current_y = 90;
 
 /*
 //1x Dollo
@@ -44,6 +45,7 @@ frame_inside_dimension = 250+60;
 
 //center_rail_diameter = 20;
 center_rail_diff = outer_rod_diameter + 1; //For outer rod > inner rod d
+echo(str("center_rail_diff = ",center_rail_diff));
 
 outer_carriage_rod_w = 15;
 //outer_carriage_extra_w = 15;
@@ -54,8 +56,10 @@ outer_carriage_length = 40;
 
 outer_rod_bearing_length = 9.75;
 outer_rod_bearing_diameter = 12.2;
+outer_rail_pos = center_rail_len/2 - outer_carriage_extra_w - outer_carriage_rod_w/2;
+echo(str("outer_rail_pos = ",outer_rail_pos));
 
-show_frame = false;
+show_frame = true;
 show_build_plate = true;
 
 frame_top_clearance = 18;
@@ -115,6 +119,29 @@ idler_clamp_backing_thickness = 8;
 v_cut_size = 0.3;
 h_cut_size = 0.1;
 
+/*
+center_rod_bearing_diameter = 12.0;
+center_rod_bearing_length = 19.0;
+
+translate([current_x,current_y,0])
+{
+translate([center_carriage_width/2-center_rod_bearing_length,0,0])
+rotate([0,90,0])
+cylinder(d=center_rod_bearing_diameter,h=center_rod_bearing_length);
+
+translate([-(center_carriage_width/2-center_rod_bearing_length),0,0])
+rotate([0,-90,0])
+cylinder(d=center_rod_bearing_diameter,h=center_rod_bearing_length);
+
+translate([0,center_carriage_width/2-center_rod_bearing_length,-center_rail_diff])
+rotate([-90,0,0])
+cylinder(d=center_rod_bearing_diameter,h=center_rod_bearing_length);
+
+translate([0,-(center_carriage_width/2-center_rod_bearing_length),-center_rail_diff])
+rotate([90,0,0])
+cylinder(d=center_rod_bearing_diameter,h=center_rod_bearing_length);
+}
+*/
 
 echo(str("Print zone: ", print_zone
 , "mm"));
@@ -324,8 +351,6 @@ module center_rails()
     color("lightgray")
     rotate([90,0,0]) cylinder(h=center_rail_len,d=center_rail_diameter,center=true);
 }
-
-outer_rail_pos = center_rail_len/2 - outer_carriage_extra_w - outer_carriage_rod_w/2;
 
 module outer_rails()
 {
@@ -1323,7 +1348,7 @@ module frame()
 module build_plate()
 {
     //Build plate
-    translate([0,0,x_rail_z-40])
+    translate([0,0,-(-(-center_rail_diff+2.88-7)     +46.5)-9.5-1.5])
     color("lightblue")
     cube([build_plate_size,build_plate_size,3],center=true);
 }
@@ -1357,6 +1382,18 @@ module assembly()
     translate([outer_rail_pos,current_y,0])
     outer_carriage();
     
+    translate([-outer_rail_pos,current_y,0])
+    rotate([0,0,180])
+    outer_carriage();
+    
+    translate([current_x,outer_rail_pos,-center_rail_diff])
+    rotate([0,0,90])
+    outer_carriage();
+    
+    translate([current_x,-outer_rail_pos,-center_rail_diff])
+    rotate([0,0,-90])
+    outer_carriage();
+    
     outer_rails();
     center_rails();
     
@@ -1372,7 +1409,10 @@ module assembly()
         frame();
     }
 
-    hotend();
+    //hotend();
+    
+    translate([current_x,current_y,0])
+    xycarriage_simple_assembly();
 }
 
 module clamp_rh_main()
