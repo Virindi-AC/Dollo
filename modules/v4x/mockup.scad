@@ -59,7 +59,7 @@ outer_rod_bearing_diameter = 12.2;
 outer_rail_pos = center_rail_len/2 - outer_carriage_extra_w - outer_carriage_rod_w/2;
 echo(str("outer_rail_pos = ",outer_rail_pos));
 
-show_frame = true;
+show_frame = false;
 show_build_plate = true;
 
 frame_top_clearance = 18;
@@ -371,18 +371,19 @@ module outer_rails()
 
 module outer_carriage()
 {
+    side_clamp_zone = clamp_zone+3;
     top_and_bottom = 8;
     
     oc_h = top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z)+center_rail_diameter/2+top_and_bottom;
     oc_z = -(top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z));
     
-    block_xmin = -clamp_zone;
+    block_xmin = -side_clamp_zone;
     block_xmax = motor_from_rail - pulley_tooth_diameter/2 - belt_full_thickness;
     
     block_xsize = block_xmax-block_xmin;
     
-    side_block_xmin = clamp_zone;
-    side_block_xsize = block_xsize - 2*clamp_zone;
+    side_block_xmin = side_clamp_zone;
+    side_block_xsize = block_xsize - 2*side_clamp_zone;
     
     top_clamp_ysize = center_rail_diameter + 2*(3+3+3);
     
@@ -400,14 +401,18 @@ module outer_carriage()
     clamp_block_xmax = clamp_block_xmin+clamp_block_xsize;
     
     clamp_block_screw_length = 10.5;
-    clamp_block_nut_trap_length = clamp_block_xmax - clamp_zone - clamp_block_screw_length+3;
+    clamp_block_nut_trap_length = clamp_block_xmax - side_clamp_zone - clamp_block_screw_length+3;
     
     clamp_screw_z_top = (clamp_block_h-belt_height)/4+belt_height/2;        
+    
+    topbottomscrew_x = (2*side_clamp_zone - outer_rod_bearing_diameter)/4+outer_rod_bearing_diameter/2;
+    topbottomscrew_y = (top_clamp_ysize - center_rail_diameter)/4+center_rail_diameter/2;
     
     echo(str("Outer carriage height = ",oc_h));
     echo(str("Outer carriage width = ",block_xsize));
     echo(str("side_block_xsize = ",side_block_xsize));
-    
+    echo(str("clamp_block_nut_trap_length = ",clamp_block_nut_trap_length));
+
     //Main block
     color([0.4,0.8,0.4])
     difference()
@@ -433,46 +438,60 @@ module outer_carriage()
         rotate([0,90,0])
         cylinder(d=center_rail_diameter,h=1000,center=true);
         
+        //Center rod: larger cut on clamp block
+        translate([side_clamp_zone,0,0])
+        rotate([0,90,0])
+        cylinder(d=center_rail_diameter+1.5,h=1000);
+        
         //Cut: top
         translate([block_xmin-0.01,-outer_carriage_length/2-0.1,-h_cut_size/2])
-        cube([0.02+clamp_zone*2, outer_carriage_length+0.2,h_cut_size]);
+        cube([0.02+side_clamp_zone*2, outer_carriage_length+0.2,h_cut_size]);
         
         //Cut: side
-        translate([clamp_zone,-outer_carriage_length/2-0.1,oc_z-0.1])
+        translate([side_clamp_zone,-outer_carriage_length/2-0.1,oc_z-0.1])
         cube([h_cut_size,outer_carriage_length+0.2,oc_h+0.2]);
         
         //Make the top piece smaller
-        translate([-clamp_zone-0.02,top_clamp_ysize/2,0])
-        cube([clamp_zone*2+0.02,outer_carriage_length/2,40]);
-        translate([-clamp_zone-0.02,-top_clamp_ysize/2-outer_carriage_length/2,0])
-        cube([clamp_zone*2+0.02,outer_carriage_length/2,40]);
+        translate([-side_clamp_zone-0.02,top_clamp_ysize/2,0])
+        cube([side_clamp_zone*2+0.02,outer_carriage_length/2,40]);
+        translate([-side_clamp_zone-0.02,-top_clamp_ysize/2-outer_carriage_length/2,0])
+        cube([side_clamp_zone*2+0.02,outer_carriage_length/2,40]);
         
         //Top piece to bottom screws
-        topbottomscrew_x = (2*clamp_zone - outer_rod_bearing_diameter)/4+outer_rod_bearing_diameter/2;
-        topbottomscrew_y = (top_clamp_ysize - center_rail_diameter)/4+center_rail_diameter/2;
-        
         translate([topbottomscrew_x,topbottomscrew_y,oc_z-0.1])
-        cylinder(h=oc_h+0.2,d=3.4);
+        cylinder(h=oc_h+0.2,d=3.8);
         
         translate([-topbottomscrew_x,topbottomscrew_y,oc_z-0.1])
-        cylinder(h=oc_h+0.2,d=3.4);
+        cylinder(h=oc_h+0.2,d=3.8);
         
         translate([topbottomscrew_x,-topbottomscrew_y,oc_z-0.1])
-        cylinder(h=oc_h+0.2,d=3.4);
+        cylinder(h=oc_h+0.2,d=3.8);
         
         translate([-topbottomscrew_x,-topbottomscrew_y,oc_z-0.1])
-        cylinder(h=oc_h+0.2,d=3.4);
+        cylinder(h=oc_h+0.2,d=3.8);
+        
+        translate([topbottomscrew_x,topbottomscrew_y,oc_z+oc_h-100-30+6])
+        cylinder(h=100,d=6);
+        
+        translate([-topbottomscrew_x,topbottomscrew_y,oc_z+oc_h-100-30+6])
+        cylinder(h=100,d=6);
+        
+        translate([topbottomscrew_x,-topbottomscrew_y,oc_z+oc_h-100-30+6])
+        cylinder(h=100,d=6);
+        
+        translate([-topbottomscrew_x,-topbottomscrew_y,oc_z+oc_h-100-30+6])
+        cylinder(h=100,d=6);
         
         //Side piece to main screws
-        translate([-clamp_zone-0.1,0,side_screw_z_top])
+        translate([-side_clamp_zone-0.1,0,side_screw_z_top])
         rotate([0,90,0])
         cylinder(d=3.4,h=block_xsize+0.2);
 
-        translate([-clamp_zone-0.1,-outer_carriage_length/2-side_screw_from_ocz,side_screw_z])
+        translate([-side_clamp_zone-0.1,-outer_carriage_length/2-side_screw_from_ocz,side_screw_z])
         rotate([0,90,0])
         cylinder(d=3.4,h=block_xsize+0.2);
         
-        translate([-clamp_zone-0.1,outer_carriage_length/2+side_screw_from_ocz,side_screw_z])
+        translate([-side_clamp_zone-0.1,outer_carriage_length/2+side_screw_from_ocz,side_screw_z])
         rotate([0,90,0])
         cylinder(d=3.4,h=block_xsize+0.2);
        
@@ -523,7 +542,27 @@ module outer_carriage()
         rotate([0,-90,0])
         cylinder(d=3.4,h=clamp_block_screw_length+0.2);
         
-        //Nuts
+        //Nuts (threaded inserts 5mm)
+        translate([clamp_block_xmax-clamp_block_screw_length+3,-outer_carriage_length/4,clamp_screw_z_top])
+        rotate([0,-90,0])
+        rotate([0,0,90])
+        cylinder(d=5.0,h=clamp_block_nut_trap_length, $fn=32);
+        
+        translate([clamp_block_xmax-clamp_block_screw_length+3,outer_carriage_length/4,clamp_screw_z_top])
+        rotate([0,-90,0])
+        rotate([0,0,90])
+        cylinder(d=5.0,h=clamp_block_nut_trap_length, $fn=32);
+        
+        translate([clamp_block_xmax-clamp_block_screw_length+3,-outer_carriage_length/4,-clamp_screw_z_top])
+        rotate([0,-90,0])
+        rotate([0,0,90])
+        cylinder(d=5.0,h=clamp_block_nut_trap_length, $fn=32);
+        
+        translate([clamp_block_xmax-clamp_block_screw_length+3,outer_carriage_length/4,-clamp_screw_z_top])
+        rotate([0,-90,0])
+        rotate([0,0,90])
+        cylinder(d=5.0,h=clamp_block_nut_trap_length, $fn=32);
+        /*
         translate([clamp_block_xmax-clamp_block_screw_length+3,-outer_carriage_length/4,clamp_screw_z_top])
         rotate([0,-90,0])
         rotate([0,0,90])
@@ -543,6 +582,7 @@ module outer_carriage()
         rotate([0,-90,0])
         rotate([0,0,90])
         nut_by_flats(f=5.54+0.35,h=clamp_block_nut_trap_length,horizontal=false);
+        */
     }
     
     //Clamp block
@@ -883,24 +923,25 @@ module clamp_righthand()
         translate([8,0,14])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         translate([-8,0,14])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         translate([8,0,-19.5])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         translate([-8,0,-19.5])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         //Idler nuts
+        /*
         trap_depth = 5+3;
         
         translate([8,-trap_depth,14])
@@ -922,6 +963,27 @@ module clamp_righthand()
         translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
         rotate([-90,0,0])
         nut_by_flats(f=5.54+0.35,h=10,horizontal=false);
+        */
+        //Idler threaded inserts
+        translate([8,-5-5.1,14])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
+        
+        translate([-8,-5-5.1,14])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
+        
+        translate([8,-5-5.1,-19.5])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
+        
+        translate([-8,-5-5.1,-19.5])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
         
         //Cut out the dovetail so it is <45 degrees up
         translate([8-2.5,-5,14])
@@ -955,6 +1017,10 @@ module clamp_righthand()
         //Cut off the idler
         translate([frame_translate-frame_bar_size/2+v_cut_size/2,outer_rail_pos-50+1,0])
         cube([v_cut_size,100,100],center=true);
+        
+        //Make idler slightly shorter so it doesn't rub on the frame
+        translate([frame_translate-frame_bar_size/2+50,outer_rail_pos-50+1,block_top-0.49])
+        cube([100,100,1],center=true);
         
         //Cut the idler to the old size
         translate([(frame_translate-frame_bar_size/2+v_cut_size/2-0.01),block_y-1,-50])
@@ -1151,24 +1217,25 @@ module clamp_lefthand()
         translate([8,0,14-pulley_bearing_h])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         translate([-8,0,14-pulley_bearing_h])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         translate([8,0,-19.5-pulley_bearing_h])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         translate([-8,0,-19.5-pulley_bearing_h])
         translate([outer_rail_pos+motor_from_rail,outer_rail_pos,0])
         rotate([90,0,0])
-        cylinder(d=3.4,h=100,center=true);
+        cylinder(d=3.6,h=100,center=true);
         
         //Idler nuts
+        /*
         trap_depth = 5+3;
         
         translate([8,-trap_depth,14-pulley_bearing_h])
@@ -1190,6 +1257,27 @@ module clamp_lefthand()
         translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
         rotate([-90,0,0])
         nut_by_flats(f=5.54+0.35,h=10,horizontal=false);
+        */
+        //Idler threaded inserts
+        translate([8,-5-5.1,14-pulley_bearing_h])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
+        
+        translate([-8,-5-5.1,14-pulley_bearing_h])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
+        
+        translate([8,-5-5.1,-19.5-pulley_bearing_h])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
+        
+        translate([-8,-5-5.1,-19.5-pulley_bearing_h])
+        translate([outer_rail_pos+motor_from_rail,frame_translate-frame_bar_size/2,0])
+        rotate([-90,0,0])
+        cylinder(d=5.0,h=30);
         
         //Cut out the dovetail so it is <45 degrees up
         translate([8-2.5,-5,14-pulley_bearing_h])
@@ -1223,6 +1311,10 @@ module clamp_lefthand()
         //Cut off the idler
         translate([frame_translate-frame_bar_size/2+v_cut_size/2,outer_rail_pos-50+1,0])
         cube([v_cut_size,100,100],center=true);
+        
+        //Make idler slightly shorter so it doesn't rub on the frame
+        translate([frame_translate-frame_bar_size/2+50,outer_rail_pos-50+1,block_top-0.49])
+        cube([100,100,1],center=true);
         
         //Cut the idler to the old size
         translate([(frame_translate-frame_bar_size/2+v_cut_size/2-0.01),block_y-1,-50])
@@ -1588,11 +1680,12 @@ module clamp_lh_bottom()
 module outer_carriage_main()
 {
     //From outer carriage
+    side_clamp_zone = clamp_zone+3;
     top_and_bottom=8;
     oc_h = top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z)+center_rail_diameter/2+top_and_bottom;
     oc_z = -(top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z));
     
-    block_xmin = -clamp_zone;
+    block_xmin = -side_clamp_zone;
     
     difference()
     {
@@ -1600,10 +1693,10 @@ module outer_carriage_main()
         
         //Cut: top
         translate([block_xmin-0.01,-outer_carriage_length/2-0.1,-h_cut_size/2])
-        cube([0.02+clamp_zone*2, outer_carriage_length+0.2,100]);
+        cube([0.02+side_clamp_zone*2, outer_carriage_length+0.2,100]);
         
         //Cut: side
-        translate([clamp_zone,-outer_carriage_length/2-0.1,oc_z-0.1])
+        translate([side_clamp_zone,-outer_carriage_length/2-0.1,oc_z-0.1])
         cube([100,outer_carriage_length+0.2,oc_h+0.2]);
     }
 }
@@ -1611,11 +1704,12 @@ module outer_carriage_main()
 module outer_carriage_top()
 {
     //From outer carriage
+    side_clamp_zone = clamp_zone+3;
     top_and_bottom=8;
     oc_h = top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z)+center_rail_diameter/2+top_and_bottom;
     oc_z = -(top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z));
     
-    block_xmin = -clamp_zone;
+    block_xmin = -side_clamp_zone;
     
     rotate([180,0,0])
     difference()
@@ -1625,10 +1719,10 @@ module outer_carriage_top()
         //Cut: top
         mirror([0,0,1])
         translate([block_xmin-0.01,-outer_carriage_length/2-0.1,-h_cut_size/2])
-        cube([0.02+clamp_zone*2, outer_carriage_length+0.2,100]);
+        cube([0.02+side_clamp_zone*2, outer_carriage_length+0.2,100]);
         
         //Cut: side
-        translate([clamp_zone,-outer_carriage_length/2-0.1,oc_z-0.1])
+        translate([side_clamp_zone,-outer_carriage_length/2-0.1,oc_z-0.1])
         cube([100,outer_carriage_length+0.2,oc_h+0.2]);
     }
 }
@@ -1636,11 +1730,12 @@ module outer_carriage_top()
 module outer_carriage_side()
 {
     //From outer carriage
+    side_clamp_zone = clamp_zone+3;
     top_and_bottom=8;
     oc_h = top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z)+center_rail_diameter/2+top_and_bottom;
     oc_z = -(top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z));
     
-    block_xmin = -clamp_zone;
+    block_xmin = -side_clamp_zone;
     block_xmax = motor_from_rail - pulley_tooth_diameter/2 - belt_full_thickness;
     
     block_xsize = block_xmax-block_xmin;
@@ -1651,7 +1746,7 @@ module outer_carriage_side()
         outer_carriage();
        
         //Cut: side in
-        translate([clamp_zone-100,-outer_carriage_length/2-0.1,oc_z-0.1])
+        translate([side_clamp_zone-100,-outer_carriage_length/2-0.1,oc_z-0.1])
         cube([100,outer_carriage_length+0.2,oc_h+0.2]);
         
         //Cut: side out
@@ -1663,11 +1758,12 @@ module outer_carriage_side()
 module outer_carriage_clamp()
 {
     //From outer carriage
+    side_clamp_zone = clamp_zone+3;
     top_and_bottom=8;
     oc_h = top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z)+center_rail_diameter/2+top_and_bottom;
     oc_z = -(top_and_bottom+outer_rod_bearing_diameter/2+(0-y_rail_z));
     
-    block_xmin = -clamp_zone;
+    block_xmin = -side_clamp_zone;
     block_xmax = motor_from_rail - pulley_tooth_diameter/2 - belt_full_thickness;
     
     block_xsize = block_xmax-block_xmin;
